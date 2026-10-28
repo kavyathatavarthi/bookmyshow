@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BookMyShow – New Movies Every Friday. Watch from the comfort of your home.">
+  <title>BookMyShow – It All Starts Here!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ─────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --red:      #D64A57;
+      --red-dark: #B83545;
+      --dark:     #1a1a2e;
+      --surface:  #ffffff;
+      --bg:       #f5f6fa;
+      --text-main:#1e1e1e;
+      --text-sub: #555;
+      --text-muted:#888;
+      --card-bg:  #ffffff;
+      --radius:   12px;
+      --shadow:   0 4px 24px rgba(0,0,0,0.08);
+      --nav-h:    68px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    img { display: block; max-width: 100%; height: auto; }
+    a   { text-decoration: none; color: inherit; }
+
+    /* ── Navbar ───────────────────────────────────────── */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      width: 100%;
+      height: var(--nav-h);
+      background: var(--surface);
+      border-bottom: 1px solid #e8e8e8;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-inner {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    /* Brand */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .brand-logo {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .brand-logo span.lines {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 3px;
+      margin: 0 2px;
+    }
+    .brand-logo span.lines i {
+      display: block;
+      width: 14px;
+      height: 2.5px;
+      background: var(--text-main);
+      border-radius: 2px;
+    }
+    .brand-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* Nav links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .nav-links a {
+      color: var(--text-sub);
+      transition: color .2s;
+      position: relative;
+      padding-bottom: 4px;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--red);
+      transition: width .2s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--text-main); }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { width: 100%; }
+
+    /* Search bar */
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: var(--bg);
+      border: 1.5px solid #e0e0e0;
+      border-radius: 50px;
+      padding: 8px 18px;
+      gap: 10px;
+      flex: 0 1 300px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .search-bar:focus-within {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(214,74,87,0.1);
+    }
+    .search-bar input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-main);
+      width: 100%;
+    }
+    .search-bar input::placeholder { color: var(--text-muted); }
+    .search-icon { width: 18px; height: 18px; opacity: .5; flex-shrink: 0; }
+
+    /* Location pill */
+    .location-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--red);
+      background: rgba(214,74,87,.08);
+      border-radius: 50px;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: background .2s;
+      flex-shrink: 0;
+    }
+    .location-pill:hover { background: rgba(214,74,87,.15); }
+    .location-pill svg { width: 14px; height: 14px; }
+
+    /* Sign in button */
+    .btn-signin {
+      background: var(--red);
+      color: #fff;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 9px 22px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .btn-signin:hover {
+      background: var(--red-dark);
+      transform: translateY(-1px);
+    }
+
+    /* ── Main content wrapper ─────────────────────────── */
+    .main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 40px 60px;
+    }
+
+    /* ── Hero Banner ──────────────────────────────────── */
+    .hero {
+      position: relative;
+      width: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    }
+    .hero img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(15,15,35,0.55) 0%, transparent 65%);
+      display: flex;
+      align-items: flex-end;
+      padding: 36px 48px;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--red);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 50px;
+      margin-bottom: 14px;
+    }
+    .hero-text h1 {
+      font-size: 42px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      margin-bottom: 8px;
+    }
+    .hero-text p {
+      font-size: 17px;
+      color: rgba(255,255,255,0.82);
+      font-weight: 400;
+      margin-bottom: 22px;
+    }
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--red);
+      color: #fff;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    .hero-btn:hover { background: var(--red-dark); transform: translateY(-2px); }
+
+    /* ── Section header ───────────────────────────────── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .section-header h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .see-all {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--red);
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+    .see-all:hover { opacity: .75; }
+    .see-all svg { width: 16px; height: 16px; }
+
+    /* ── Movies Grid ──────────────────────────────────── */
+    .movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .movie-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform .2s, box-shadow .2s;
+      cursor: pointer;
+    }
+    .movie-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.14);
+    }
+    .movie-card-img {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 2/3;
+      overflow: hidden;
+    }
+    .movie-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .3s;
+    }
+    .movie-card:hover .movie-card-img img { transform: scale(1.05); }
+
+    .movie-card-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.65);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 50px;
+      backdrop-filter: blur(4px);
+    }
+
+    .movie-card-body {
+      padding: 14px 14px 16px;
+    }
+    .movie-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .movie-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .meta-dot { width: 4px; height: 4px; background: #ccc; border-radius: 50%; }
+    .rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--red);
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .rating svg { width: 13px; height: 13px; }
+    .likes {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #3aa843;
+      font-weight: 500;
+      font-size: 12px;
+    }
+    .likes svg { width: 12px; height: 12px; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ NAVBAR ══════════════════════════════════════════ -->
+    <!-- ══ NAVBAR (Standardized from home-page.html) ══ -->
+    <!-- ══ NAVBAR (Standardized BookMyShow Header) ══ -->
+  <nav class="navbar" id="navbar" style="position:sticky;top:0;z-index:200;width:100%;height:68px;background:#ffffff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 12px rgba(0,0,0,0.06);display:flex;align-items:center;">
+    <div class="navbar-inner" style="width:100%;max-width:1400px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+
+      <!-- Brand -->
+      <a href="home-page.html" class="brand" id="brand-logo" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <img src="images/bms_logo.png" alt="BookMyShow" style="height:36px;width:auto;object-fit:contain;display:block;" />
+        <span style="font-size:24px;font-weight:800;color:#1e1e1e;letter-spacing:-0.5px;">book<span style="color:#D64A57;">my</span>show</span>
+      </a>
+
+      <!-- Nav links -->
+      <ul class="nav-links" id="nav-links" style="display:flex;align-items:center;gap:32px;list-style:none;margin:0;padding:0;font-size:15px;font-weight:500;">
+        <li><a href="home-page.html" class="active">Home</a></li>
+        <li><a href="newshowing.html" class="">Movies</a></li>
+        <li><a href="filterslanding.html" class="">Filters</a></li>
+        <li><a href="mybookings.html" class="">My Bookings</a></li>
+      </ul>
+
+      <!-- Search -->
+      <div class="search-bar" id="search-bar" style="display:flex;align-items:center;background:#f5f6fa;border:1.5px solid #e0e0e0;border-radius:50px;padding:8px 18px;gap:10px;flex:0 1 320px;">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;min-width:18px;max-width:18px;opacity:0.5;flex-shrink:0;">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" placeholder="Search movies, shows…" id="search-input" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:14px;color:#1e1e1e;width:100%;" />
+      </div>
+
+      <!-- Location & Account -->
+      <div style="display:flex;align-items:center;gap:16px;flex-shrink:0;">
+        <div class="location-pill" id="location-pill" style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:#D64A57;background:rgba(214,74,87,0.08);border-radius:50px;padding:7px 16px;cursor:pointer;white-space:nowrap;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;min-width:14px;max-width:14px;flex-shrink:0;">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          Vellore
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;min-width:14px;max-width:14px;flex-shrink:0;">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+        <a href="login-page.html" style="text-decoration:none;"><button class="btn-signin" id="btn-signin" style="background:#D64A57;color:#ffffff;font-family:inherit;font-weight:600;font-size:14px;padding:9px 22px;border:none;border-radius:50px;cursor:pointer;white-space:nowrap;">Account</button></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ MAIN ════════════════════════════════════════════ -->
+  <main class="main" id="main-content">
+
+    <!-- Hero Banner -->
+    <section class="hero" id="hero-banner">
+      <img src="images/image-24-52.png" alt="New Movies Every Friday – BookMyShow" />
+      <div class="hero-overlay">
+        <div class="hero-text">
+          <div class="hero-badge">New Every Friday</div>
+          <h1>New Movies<br>Every Friday</h1>
+          <p>From the comfort of your home</p>
+          <a href="newshowing.html" style="text-decoration:none;">
+            <button class="hero-btn" id="hero-cta">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              Explore Now
+            </button>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recommended Movies -->
+    <section id="recommended-section">
+      <div class="section-header">
+        <h2>Recommended Movies</h2>
+        <a href="newshowing.html" style="text-decoration:none;">
+          <div class="see-all" id="see-all-recommended">
+            See All
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+      </div>
+
+      <div class="movies-grid" id="movies-grid">
+
+        <!-- Card 1 -->
+        <div class="movie-card" onclick="window.location.href='time-and-date-selection.html'" id="movie-card-1">
+          <div class="movie-card-img">
+            <img src="images/image-13-61.png" alt="Vishwanath &amp; Sons" />
+            <span class="movie-card-badge">Drama</span>
+          </div>
+          <div class="movie-card-body">
+            <div class="movie-card-title">Vishwanath &amp; Sons</div>
+            <div class="movie-card-meta">
+              <span class="rating">
+                <svg width="20" height="20" style="max-width:24px;max-height:24px;" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                9.5
+              </span>
+              <span class="meta-dot"></span>
+              <span>2024</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="movie-card" onclick="window.location.href='time-and-date-selection.html'" id="movie-card-2">
+          <div class="movie-card-img">
+            <img src="images/image-12-69.png" alt="Irumudi" />
+            <span class="movie-card-badge">Action</span>
+          </div>
+          <div class="movie-card-body">
+            <div class="movie-card-title">Irumudi</div>
+            <div class="movie-card-meta">
+              <span class="likes">
+                <svg width="20" height="20" style="max-width:24px;max-height:24px;" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                1.5M+ likes
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 – reuse asset -->
+        <div class="movie-card" onclick="window.location.href='time-and-date-selection.html'" id="movie-card-3">
+          <div class="movie-card-img">
+            <img src="images/image-13-79.png" alt="Blockbuster Hit" />
+            <span class="movie-card-badge">Thriller</span>
+          </div>
+          <div class="movie-card-body">
+            <div class="movie-card-title">Blockbuster Hit</div>
+            <div class="movie-card-meta">
+              <span class="rating">
+                <svg width="20" height="20" style="max-width:24px;max-height:24px;" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                8.7
+              </span>
+              <span class="meta-dot"></span>
+              <span>2024</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="movie-card" onclick="window.location.href='time-and-date-selection.html'" id="movie-card-4">
+          <div class="movie-card-img">
+            <img src="images/image-12-95.png" alt="Night Rider" />
+            <span class="movie-card-badge">Crime</span>
+          </div>
+          <div class="movie-card-body">
+            <div class="movie-card-title">Night Rider</div>
+            <div class="movie-card-meta">
+              <span class="rating">
+                <svg width="20" height="20" style="max-width:24px;max-height:24px;" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                8.2
+              </span>
+              <span class="meta-dot"></span>
+              <span>2023</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="movie-card" onclick="window.location.href='time-and-date-selection.html'" id="movie-card-5">
+          <div class="movie-card-img">
+            <img src="images/image-12-103.png" alt="The Last Stand" />
+            <span class="movie-card-badge">Action</span>
+          </div>
+          <div class="movie-card-body">
+            <div class="movie-card-title">The Last Stand</div>
+            <div class="movie-card-meta">
+              <span class="likes">
+                <svg width="20" height="20" style="max-width:24px;max-height:24px;" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                920K+ likes
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="movie-card" onclick="window.location.href='time-and-date-selection.html'" id="movie-card-6">
+          <div class="movie-card-img">
+            <img src="images/image-12-111.png" alt="Fade to Black" />
+            <span class="movie-card-badge">Mystery</span>
+          </div>
+          <div class="movie-card-body">
+            <div class="movie-card-title">Fade to Black</div>
+            <div class="movie-card-meta">
+              <span class="rating">
+                <svg width="20" height="20" style="max-width:24px;max-height:24px;" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                7.9
+              </span>
+              <span class="meta-dot"></span>
+              <span>2024</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>

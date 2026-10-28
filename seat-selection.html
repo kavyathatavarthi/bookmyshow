@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Seats – BookMyShow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="desktop.css">
+  <style>
+/* ═══════════════════════════════════════════════
+   Stream Premiere – Shared Desktop Stylesheet
+   ═══════════════════════════════════════════════ */
+
+/* ── Google Fonts ─────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ── Reset ──────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --red:      #D64A57;
+  --red-dark: #B83545;
+  --red-light:rgba(214,74,87,.08);
+  --green:    #3DAA43;
+  --bg:       #f5f6fa;
+  --surface:  #ffffff;
+  --text:     #1e1e1e;
+  --sub:      #555;
+  --muted:    #888;
+  --border:   #e8e8e8;
+  --radius:   12px;
+  --radius-lg:20px;
+  --shadow-sm:0 2px 8px rgba(0,0,0,0.06);
+  --shadow:   0 4px 24px rgba(0,0,0,0.08);
+  --shadow-lg:0 8px 40px rgba(0,0,0,0.14);
+  --nav-h:    68px;
+  --max-w:    1400px;
+  --pad:      40px;
+}
+
+html { scroll-behavior:smooth; }
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+img  { display:block; max-width:100%; height:auto; }
+a    { text-decoration:none; color:inherit; }
+ul   { list-style:none; }
+button { font-family:inherit; cursor:pointer; }
+input, select, textarea { font-family:inherit; }
+
+/* ── Shared Navbar ──────────────────────────────── */
+.sp-nav {
+  position:sticky; top:0; z-index:200;
+  width:100%; height:var(--nav-h);
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow-sm);
+  display:flex; align-items:center;
+}
+.sp-nav-inner {
+  width:100%; max-width:var(--max-w); margin:0 auto;
+  padding:0 var(--pad);
+  display:flex; align-items:center; justify-content:space-between; gap:24px;
+}
+.sp-brand { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.sp-brand-logo { font-size:26px; font-weight:800; letter-spacing:-1px; color:var(--text); display:flex; align-items:center; gap:3px; }
+.sp-lines { display:inline-flex; flex-direction:column; gap:3px; margin:0 3px; }
+.sp-lines i { display:block; width:13px; height:2.5px; background:var(--text); border-radius:2px; }
+.sp-brand-tag { font-size:11px; font-weight:700; letter-spacing:2px; color:var(--red); text-transform:uppercase; }
+.sp-nav-links { display:flex; align-items:center; gap:28px; font-size:15px; font-weight:500; }
+.sp-nav-links a { color:var(--sub); transition:color .2s; position:relative; padding-bottom:4px; }
+.sp-nav-links a::after { content:''; position:absolute; bottom:0; left:0; width:0; height:2px; background:var(--red); transition:width .2s; }
+.sp-nav-links a:hover, .sp-nav-links a.active { color:var(--text); }
+.sp-nav-links a:hover::after, .sp-nav-links a.active::after { width:100%; }
+.sp-search { display:flex; align-items:center; gap:10px; background:var(--bg); border:1.5px solid #e0e0e0; border-radius:50px; padding:8px 18px; flex:0 1 260px; transition:border-color .2s,box-shadow .2s; }
+.sp-search:focus-within { border-color:var(--red); box-shadow:0 0 0 3px rgba(214,74,87,.1); }
+.sp-search svg { width:17px; height:17px; opacity:.45; flex-shrink:0; }
+.sp-search input { border:none; background:transparent; outline:none; font-size:14px; color:var(--text); width:100%; }
+.sp-search input::placeholder { color:var(--muted); }
+.sp-loc { display:flex; align-items:center; gap:6px; font-size:14px; font-weight:600; color:var(--red); background:var(--red-light); border-radius:50px; padding:7px 14px; cursor:pointer; transition:background .2s; flex-shrink:0; }
+.sp-loc:hover { background:rgba(214,74,87,.15); }
+.sp-loc svg { width:14px; height:14px; }
+.sp-btn { background:var(--red); color:#fff; font-weight:600; font-size:14px; padding:9px 22px; border:none; border-radius:50px; transition:background .2s,transform .15s; flex-shrink:0; }
+.sp-btn:hover { background:var(--red-dark); transform:translateY(-1px); }
+.sp-btn-outline { background:transparent; color:var(--red); font-weight:600; font-size:14px; padding:8px 20px; border:2px solid var(--red); border-radius:50px; transition:all .2s; flex-shrink:0; }
+.sp-btn-outline:hover { background:var(--red); color:#fff; }
+
+/* ── Page wrapper ───────────────────────────────── */
+.sp-main { max-width:var(--max-w); margin:0 auto; padding:32px var(--pad) 60px; }
+
+/* ── Back row ───────────────────────────────────── */
+.sp-back { display:flex; align-items:center; gap:8px; margin-bottom:24px; cursor:pointer; color:var(--sub); font-size:14px; font-weight:500; transition:color .2s; }
+.sp-back:hover { color:var(--red); }
+.sp-back svg { width:20px; height:20px; }
+
+/* ── Page title ─────────────────────────────────── */
+.sp-page-title { font-size:26px; font-weight:700; margin-bottom:24px; }
+
+/* ── Card ───────────────────────────────────────── */
+.sp-card { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:28px; }
+.sp-card + .sp-card { margin-top:20px; }
+
+/* ── Section header ─────────────────────────────── */
+.sp-section-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.sp-section-hdr h2 { font-size:20px; font-weight:700; }
+.sp-see-all { display:flex; align-items:center; gap:4px; font-size:14px; font-weight:600; color:var(--red); cursor:pointer; transition:opacity .2s; }
+.sp-see-all:hover { opacity:.7; }
+.sp-see-all svg { width:16px; height:16px; }
+
+/* ── Movie card ─────────────────────────────────── */
+.sp-movie-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:24px; }
+.sp-movie-card { background:var(--surface); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); transition:transform .2s,box-shadow .2s; cursor:pointer; }
+.sp-movie-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-lg); }
+.sp-movie-card-img { position:relative; width:100%; aspect-ratio:2/3; overflow:hidden; }
+.sp-movie-card-img img { width:100%; height:100%; object-fit:cover; transition:transform .3s; }
+.sp-movie-card:hover .sp-movie-card-img img { transform:scale(1.05); }
+.sp-genre-badge { position:absolute; top:10px; left:10px; background:rgba(0,0,0,.6); color:#fff; font-size:11px; font-weight:600; padding:3px 9px; border-radius:50px; backdrop-filter:blur(4px); }
+.sp-movie-card-body { padding:14px; }
+.sp-movie-card-title { font-size:15px; font-weight:600; color:var(--text); margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sp-movie-card-meta { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); }
+.sp-dot { width:4px; height:4px; background:#ccc; border-radius:50%; }
+.sp-rating { display:inline-flex; align-items:center; gap:4px; color:var(--red); font-weight:600; }
+.sp-rating svg { width:13px; height:13px; }
+.sp-likes { display:inline-flex; align-items:center; gap:4px; color:var(--green); font-weight:500; font-size:12px; }
+.sp-likes svg { width:12px; height:12px; }
+
+/* ── Filter chips ───────────────────────────────── */
+.sp-chips { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; }
+.sp-chip { display:inline-flex; align-items:center; gap:6px; padding:7px 16px; border:1.5px solid var(--border); border-radius:50px; font-size:14px; font-weight:500; cursor:pointer; transition:all .2s; background:var(--surface); color:var(--text); }
+.sp-chip:hover, .sp-chip.active { border-color:var(--red); color:var(--red); background:var(--red-light); }
+.sp-chip svg { width:14px; height:14px; }
+
+/* ── Form elements ──────────────────────────────── */
+.sp-input { width:100%; padding:12px 16px; border:1.5px solid var(--border); border-radius:10px; font-size:15px; color:var(--text); outline:none; transition:border-color .2s,box-shadow .2s; background:var(--surface); }
+.sp-input:focus { border-color:var(--red); box-shadow:0 0 0 3px rgba(214,74,87,.1); }
+.sp-input::placeholder { color:var(--muted); }
+.sp-label { display:block; font-size:13px; font-weight:600; color:var(--sub); margin-bottom:6px; letter-spacing:.3px; }
+.sp-form-group { margin-bottom:18px; }
+.sp-divider { display:flex; align-items:center; gap:12px; margin:18px 0; color:var(--muted); font-size:13px; }
+.sp-divider::before, .sp-divider::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* ── Date selector ──────────────────────────────── */
+.sp-dates { display:flex; gap:12px; margin-bottom:24px; overflow-x:auto; padding-bottom:4px; }
+.sp-date-pill { display:flex; flex-direction:column; align-items:center; padding:10px 18px; border:1.5px solid var(--border); border-radius:12px; cursor:pointer; transition:all .2s; min-width:72px; }
+.sp-date-pill:hover { border-color:var(--red); }
+.sp-date-pill.active { background:var(--red); border-color:var(--red); color:#fff; }
+.sp-date-pill.disabled { opacity:.4; pointer-events:none; }
+.sp-date-day { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.sp-date-num { font-size:22px; font-weight:700; line-height:1; margin:2px 0; }
+.sp-date-month { font-size:11px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; }
+
+/* ── Cinema listing ─────────────────────────────── */
+.sp-cinema-row { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px 24px; margin-bottom:16px; transition:box-shadow .2s; }
+.sp-cinema-row:hover { box-shadow:var(--shadow-lg); }
+.sp-cinema-name { font-size:17px; font-weight:700; margin-bottom:4px; }
+.sp-cinema-sub  { font-size:13px; color:var(--muted); margin-bottom:14px; }
+.sp-showtimes   { display:flex; flex-wrap:wrap; gap:10px; }
+.sp-time-pill { padding:8px 18px; border:1.5px solid #d0d0d0; border-radius:8px; font-size:14px; font-weight:600; color:var(--sub); cursor:pointer; transition:all .2s; }
+.sp-time-pill:hover { border-color:var(--green); color:var(--green); }
+.sp-time-pill.active { background:var(--green); border-color:var(--green); color:#fff; }
+
+/* ── Seat grid ──────────────────────────────────── */
+.sp-seat-section-label { font-size:13px; font-weight:700; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:12px; }
+.sp-seat-section-price { font-size:12px; color:var(--sub); margin-left:8px; font-weight:400; }
+.sp-seat-row  { display:flex; align-items:center; gap:6px; margin-bottom:8px; }
+.sp-seat-row-label { width:24px; text-align:center; font-size:12px; color:var(--muted); font-weight:600; flex-shrink:0; }
+.sp-seat { width:32px; height:32px; border-radius:6px; border:1.5px solid #d0d0d0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:var(--sub); cursor:pointer; transition:all .15s; }
+.sp-seat:hover { border-color:var(--red); color:var(--red); }
+.sp-seat.booked { background:#f0f0f0; border-color:#e0e0e0; color:#ccc; cursor:not-allowed; }
+.sp-seat.selected { background:#3DA554 !important; border-color:#3DA554 !important; color:#fff !important; }
+.sp-seat.available { border-color:var(--green); color:var(--green); }
+.sp-screen-bar { background:linear-gradient(90deg,transparent,#aaa,transparent); height:4px; border-radius:2px; margin:0 auto 32px; width:70%; }
+.sp-screen-label { text-align:center; font-size:12px; color:var(--muted); margin-bottom:20px; letter-spacing:2px; text-transform:uppercase; }
+
+/* ── Booking summary card ───────────────────────── */
+.sp-summary-card { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
+.sp-summary-header { background:var(--red); color:#fff; padding:20px 24px; }
+.sp-summary-header h3 { font-size:20px; font-weight:700; margin-bottom:4px; }
+.sp-summary-header p  { font-size:13px; opacity:.85; }
+.sp-summary-body { padding:24px; }
+.sp-summary-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); font-size:15px; }
+.sp-summary-row:last-child { border-bottom:none; }
+.sp-summary-row.total { font-weight:700; font-size:17px; color:var(--text); }
+.sp-summary-label { color:var(--sub); }
+.sp-summary-val   { color:var(--text); font-weight:600; }
+.sp-booking-info  { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
+.sp-info-item label { display:block; font-size:12px; color:var(--muted); margin-bottom:3px; text-transform:uppercase; letter-spacing:.5px; }
+.sp-info-item span  { font-size:15px; font-weight:600; color:var(--text); }
+
+/* ── Status/confirmation ────────────────────────── */
+.sp-confirm-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; text-align:center; }
+.sp-confirm-icon { width:100px; height:100px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:24px; font-size:48px; }
+.sp-confirm-icon.success { background:rgba(61,170,67,.12); color:var(--green); }
+.sp-confirm-icon.cancel  { background:rgba(214,74,87,.1); color:var(--red); }
+.sp-confirm-title { font-size:32px; font-weight:800; margin-bottom:8px; }
+.sp-confirm-sub   { font-size:16px; color:var(--sub); margin-bottom:32px; max-width:400px; line-height:1.6; }
+
+/* ── QR ticket ──────────────────────────────────── */
+.sp-ticket { background:var(--surface); border-radius:20px; box-shadow:var(--shadow-lg); overflow:hidden; max-width:420px; margin:0 auto; }
+.sp-ticket-header { background:var(--red); color:#fff; padding:24px; text-align:center; }
+.sp-ticket-header h2 { font-size:24px; font-weight:800; }
+.sp-ticket-header p  { font-size:13px; opacity:.85; margin-top:4px; }
+.sp-ticket-body   { padding:28px; }
+.sp-ticket-qr     { background:#f9f9f9; border-radius:12px; padding:20px; text-align:center; margin-bottom:20px; border:1px dashed #ddd; }
+.sp-ticket-qr img { max-width:180px; margin:0 auto; }
+.sp-ticket-detail { display:flex; flex-direction:column; gap:12px; }
+.sp-ticket-row    { display:flex; justify-content:space-between; font-size:14px; }
+.sp-ticket-row label { color:var(--muted); }
+.sp-ticket-row span  { font-weight:600; }
+.sp-ticket-dashed { border:none; border-top:2px dashed var(--border); margin:16px 0; }
+.sp-booking-id    { text-align:center; font-size:13px; color:var(--muted); margin-top:16px; }
+.sp-booking-id span { font-weight:700; color:var(--text); }
+
+/* ── Language/filter page ───────────────────────── */
+.sp-filter-layout { display:grid; grid-template-columns:260px 1fr; gap:32px; align-items:start; }
+.sp-filter-sidebar { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:0; overflow:hidden; }
+.sp-filter-cat { padding:16px 20px; border-bottom:1px solid var(--border); font-size:15px; font-weight:600; cursor:pointer; transition:background .15s,color .15s; }
+.sp-filter-cat:hover { background:var(--bg); color:var(--red); }
+.sp-filter-cat.active { background:var(--red-light); color:var(--red); border-left:3px solid var(--red); }
+.sp-filter-content { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:28px; }
+.sp-filter-title { font-size:18px; font-weight:700; margin-bottom:20px; }
+.sp-checkbox-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
+.sp-checkbox-item { display:flex; align-items:center; gap:10px; padding:12px 16px; border:1.5px solid var(--border); border-radius:10px; cursor:pointer; transition:all .2s; }
+.sp-checkbox-item:hover { border-color:var(--red); background:var(--red-light); }
+.sp-checkbox-item input { accent-color:var(--red); width:16px; height:16px; }
+.sp-checkbox-item label { font-size:15px; font-weight:500; cursor:pointer; }
+.sp-filter-footer { display:flex; justify-content:flex-end; gap:12px; margin-top:24px; padding-top:20px; border-top:1px solid var(--border); }
+
+/* ── My bookings card ───────────────────────────── */
+.sp-booking-card { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px; display:grid; grid-template-columns:auto 1fr auto; gap:20px; align-items:center; transition:box-shadow .2s; }
+.sp-booking-card:hover { box-shadow:var(--shadow-lg); }
+.sp-booking-card + .sp-booking-card { margin-top:16px; }
+.sp-booking-poster { width:80px; height:112px; border-radius:8px; overflow:hidden; flex-shrink:0; }
+.sp-booking-poster img { width:100%; height:100%; object-fit:cover; }
+.sp-booking-info-col h3  { font-size:18px; font-weight:700; margin-bottom:6px; }
+.sp-booking-info-col p   { font-size:13px; color:var(--sub); margin-bottom:3px; }
+.sp-booking-actions { display:flex; flex-direction:column; gap:10px; align-items:flex-end; }
+.sp-view-ticket { display:inline-flex; align-items:center; gap:6px; font-size:14px; font-weight:600; color:var(--red); cursor:pointer; }
+.sp-view-ticket svg { width:16px; height:16px; }
+
+/* ── Cancellation policy ────────────────────────── */
+.sp-policy-list { display:flex; flex-direction:column; gap:16px; margin-top:16px; }
+.sp-policy-item { display:flex; align-items:flex-start; gap:14px; padding:16px; border-radius:10px; background:var(--bg); }
+.sp-policy-icon { width:36px; height:36px; border-radius:50%; background:var(--red-light); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sp-policy-icon svg { width:18px; height:18px; color:var(--red); }
+.sp-policy-text h4 { font-size:15px; font-weight:600; margin-bottom:3px; }
+.sp-policy-text p  { font-size:13px; color:var(--sub); line-height:1.5; }
+
+/* ── Two-column page layout ─────────────────────── */
+.sp-two-col { display:grid; grid-template-columns:1fr 360px; gap:32px; align-items:start; }
+
+/* ── Utility ────────────────────────────────────── */
+.sp-red  { color:var(--red); }
+.sp-grn  { color:var(--green); }
+.sp-muted{ color:var(--muted); }
+.sp-bold { font-weight:700; }
+.sp-mt16 { margin-top:16px; }
+.sp-mt24 { margin-top:24px; }
+.sp-mb16 { margin-bottom:16px; }
+.sp-mb24 { margin-bottom:24px; }
+.sp-tag  { display:inline-block; background:var(--red-light); color:var(--red); font-size:12px; font-weight:600; padding:3px 10px; border-radius:50px; }
+
+/* ── Login page center ──────────────────────────── */
+.sp-auth-wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--bg); }
+.sp-auth-card { background:var(--surface); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); padding:48px 52px; width:100%; max-width:460px; }
+.sp-auth-logo { text-align:center; margin-bottom:32px; }
+.sp-auth-title { font-size:22px; font-weight:700; margin-bottom:6px; }
+.sp-auth-sub   { font-size:14px; color:var(--sub); margin-bottom:28px; line-height:1.5; }
+.sp-otp-boxes  { display:flex; gap:12px; justify-content:center; margin-bottom:20px; }
+.sp-otp-box    { width:56px; height:60px; border:1.5px solid var(--border); border-radius:10px; font-size:24px; font-weight:700; text-align:center; outline:none; transition:border-color .2s,box-shadow .2s; }
+.sp-otp-box:focus { border-color:var(--red); box-shadow:0 0 0 3px rgba(214,74,87,.1); }
+.sp-resend     { font-size:13px; color:var(--muted); text-align:center; margin-bottom:20px; }
+.sp-resend span { color:var(--red); font-weight:600; cursor:pointer; }
+
+/* ── Navbar Right & Location Pill (Prevent Overlap) ── */
+.sp-nav-right {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 16px !important;
+  flex-shrink: 0 !important;
+}
+.sp-loc-pill, .sp-loc {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--red) !important;
+  background: var(--red-light) !important;
+  border-radius: 50px !important;
+  padding: 7px 16px !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  border: 1px solid rgba(214, 74, 87, 0.15) !important;
+}
+.sp-loc-pill svg, .sp-loc svg {
+  flex-shrink: 0 !important;
+}
+.sp-btn-sm {
+  padding: 8px 18px !important;
+  font-size: 13px !important;
+  white-space: nowrap !important;
+}
+.sp-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-decoration: none !important;
+  flex-shrink: 0 !important;
+}
+.sp-brand img {
+  height: 36px !important;
+  width: auto !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+.sp-brand-name {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  color: var(--text, #1e1e1e) !important;
+  letter-spacing: -0.5px !important;
+}
+.sp-brand-name span {
+  color: var(--red, #D64A57) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   Exact Home Page Navbar Format (Reused Across Every Page)
+   ══════════════════════════════════════════════════════════════════════ */
+.navbar, .sp-nav {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 200 !important;
+  width: 100% !important;
+  height: 68px !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #e8e8e8 !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.navbar-inner, .sp-nav-inner {
+  width: 100% !important;
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  padding: 0 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 24px !important;
+}
+
+.brand, .sp-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-shrink: 0 !important;
+  text-decoration: none !important;
+}
+
+.nav-links, .sp-nav-links {
+  display: flex !important;
+  align-items: center !important;
+  gap: 32px !important;
+  list-style: none !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.nav-links a, .sp-nav-links a {
+  color: #555555 !important;
+  text-decoration: none !important;
+  transition: color .2s !important;
+  position: relative !important;
+  padding-bottom: 4px !important;
+}
+
+.nav-links a::after, .sp-nav-links a::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 2px !important;
+  background: #D64A57 !important;
+  transition: width .2s !important;
+}
+
+.nav-links a:hover,
+.nav-links a.active,
+.sp-nav-links a:hover,
+.sp-nav-links a.active {
+  color: #1e1e1e !important;
+  font-weight: 600 !important;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after,
+.sp-nav-links a:hover::after,
+.sp-nav-links a.active::after {
+  width: 100% !important;
+}
+
+.search-bar, .sp-search {
+  display: flex !important;
+  align-items: center !important;
+  background: #f5f6fa !important;
+  border: 1.5px solid #e0e0e0 !important;
+  border-radius: 50px !important;
+  padding: 8px 18px !important;
+  gap: 10px !important;
+  flex: 0 1 320px !important;
+  transition: border-color .2s, box-shadow .2s !important;
+}
+
+.search-bar:focus-within, .sp-search:focus-within {
+  border-color: #D64A57 !important;
+  box-shadow: 0 0 0 3px rgba(214,74,87,0.1) !important;
+}
+
+.search-bar input, .sp-search input {
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  color: #1e1e1e !important;
+  width: 100% !important;
+}
+
+.search-bar input::placeholder, .sp-search input::placeholder {
+  color: #888888 !important;
+}
+
+.search-icon, .sp-search svg {
+  width: 18px !important;
+  height: 18px !important;
+  opacity: .5 !important;
+  flex-shrink: 0 !important;
+}
+
+.location-pill, .sp-loc-pill, .sp-loc {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #D64A57 !important;
+  background: rgba(214,74,87,.08) !important;
+  border-radius: 50px !important;
+  padding: 7px 16px !important;
+  cursor: pointer !important;
+  transition: background .2s !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  border: none !important;
+}
+
+.location-pill:hover, .sp-loc-pill:hover, .sp-loc:hover {
+  background: rgba(214,74,87,.15) !important;
+}
+
+.location-pill svg, .sp-loc-pill svg, .sp-loc svg {
+  width: 14px !important;
+  height: 14px !important;
+  flex-shrink: 0 !important;
+}
+
+.btn-signin, .sp-btn-signin {
+  background: #D64A57 !important;
+  color: #ffffff !important;
+  font-family: inherit !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  padding: 9px 22px !important;
+  border: none !important;
+  border-radius: 50px !important;
+  cursor: pointer !important;
+  transition: background .2s, transform .15s !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+}
+
+.btn-signin:hover, .sp-btn-signin:hover {
+  background: #B83545 !important;
+  transform: translateY(-1px) !important;
+}
+
+.nav-right-wrap, .sp-nav-right {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+
+    .sp-seat-wrap { display:grid; grid-template-columns:1fr 340px; gap:32px; align-items:start; }
+    .sp-legend { display:flex; gap:20px; margin-bottom:24px; }
+    .sp-legend-item { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--sub); }
+    .sp-legend-box { width:20px; height:20px; border-radius:4px; border:1.5px solid; }
+    .sp-price-info { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px; position:sticky; top:calc(var(--nav-h) + 16px); }
+  </style>
+</head>
+<body>
+  <!-- ══ NAVBAR (Standardized from home-page.html) ══ -->
+    <!-- ══ NAVBAR (Standardized BookMyShow Header) ══ -->
+  <nav class="navbar" id="navbar" style="position:sticky;top:0;z-index:200;width:100%;height:68px;background:#ffffff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 12px rgba(0,0,0,0.06);display:flex;align-items:center;">
+    <div class="navbar-inner" style="width:100%;max-width:1400px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+
+      <!-- Brand -->
+      <a href="home-page.html" class="brand" id="brand-logo" style="display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;">
+        <img src="images/bms_logo.png" alt="BookMyShow" style="height:36px;width:auto;object-fit:contain;display:block;" />
+        <span style="font-size:24px;font-weight:800;color:#1e1e1e;letter-spacing:-0.5px;">book<span style="color:#D64A57;">my</span>show</span>
+      </a>
+
+      <!-- Nav links -->
+      <ul class="nav-links" id="nav-links" style="display:flex;align-items:center;gap:32px;list-style:none;margin:0;padding:0;font-size:15px;font-weight:500;">
+        <li><a href="home-page.html" class="">Home</a></li>
+        <li><a href="newshowing.html" class="active">Movies</a></li>
+        <li><a href="filterslanding.html" class="">Filters</a></li>
+        <li><a href="mybookings.html" class="">My Bookings</a></li>
+      </ul>
+
+      <!-- Search -->
+      <div class="search-bar" id="search-bar" style="display:flex;align-items:center;background:#f5f6fa;border:1.5px solid #e0e0e0;border-radius:50px;padding:8px 18px;gap:10px;flex:0 1 320px;">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;min-width:18px;max-width:18px;opacity:0.5;flex-shrink:0;">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" placeholder="Search movies, shows…" id="search-input" style="border:none;background:transparent;outline:none;font-family:inherit;font-size:14px;color:#1e1e1e;width:100%;" />
+      </div>
+
+      <!-- Location & Account -->
+      <div style="display:flex;align-items:center;gap:16px;flex-shrink:0;">
+        <div class="location-pill" id="location-pill" style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:#D64A57;background:rgba(214,74,87,0.08);border-radius:50px;padding:7px 16px;cursor:pointer;white-space:nowrap;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;min-width:14px;max-width:14px;flex-shrink:0;">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          Vellore
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;min-width:14px;max-width:14px;flex-shrink:0;">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+        <a href="login-page.html" style="text-decoration:none;"><button class="btn-signin" id="btn-signin" style="background:#D64A57;color:#ffffff;font-family:inherit;font-weight:600;font-size:14px;padding:9px 22px;border:none;border-radius:50px;cursor:pointer;white-space:nowrap;">Account</button></a>
+      </div>
+    </div>
+  </nav>
+
+<main class="sp-main">
+  <div class="sp-back" onclick="history.back()" id="back-btn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Back
+  </div>
+
+  <!-- Movie + cinema info -->
+  <div style="margin-bottom:28px;">
+    <h1 style="font-size:26px;font-weight:800;margin-bottom:4px;">Irumudi</h1>
+    <p class="sp-muted">PVR: Velocity, Silk Mill, Gandhi Nagar &nbsp;|&nbsp; Thu, 27 Aug &nbsp;|&nbsp; 11:15 AM</p>
+  </div>
+
+  <!-- Date/time row -->
+  <div style="display:flex;gap:12px;margin-bottom:28px;">
+    <div class="sp-date-pill active" style="flex-direction:row;padding:10px 20px;min-width:auto;gap:8px;" id="show-date">
+      <span style="font-weight:700;">Thu, 27 Aug</span>
+    </div>
+    <div class="sp-time-pill active" id="show-time-1">11:00 AM</div>
+    <div class="sp-time-pill" id="show-time-2">02:45 PM</div>
+  </div>
+
+  <div class="sp-seat-wrap">
+    <!-- Seat map -->
+    <div>
+      <!-- Screen -->
+      <div class="sp-screen-label">SCREEN THIS SIDE</div>
+      <div class="sp-screen-bar"></div>
+
+      <!-- Legend -->
+      <div class="sp-legend">
+        <div class="sp-legend-item">
+          <div class="sp-legend-box" style="border-color:#d0d0d0;background:#fff;"></div> Available
+        </div>
+        <div class="sp-legend-item">
+          <div class="sp-legend-box" style="border-color:#3DA554;background:#3DA554;"></div> Selected
+        </div>
+        <div class="sp-legend-item">
+          <div class="sp-legend-box" style="border-color:#e0e0e0;background:#f0f0f0;"></div> Sold Out
+        </div>
+      </div>
+
+      <!-- PRIME section - Rs.202.49 -->
+      <div style="margin-bottom:24px;" id="section-prime">
+        <div class="sp-seat-section-label">PRIME <span class="sp-seat-section-price">Rs.202.49</span></div>
+        <div class="sp-seat-row" id="row-C">
+          <div class="sp-seat-row-label">C</div>
+          <div class="sp-seat" id="seat-C1">1</div>
+          <div class="sp-seat booked" id="seat-C2">2</div>
+          <div class="sp-seat booked" id="seat-C3">3</div>
+          <div class="sp-seat" id="seat-C4">4</div>
+          <div class="sp-seat" id="seat-C5">5</div>
+          <div class="sp-seat booked" id="seat-C6">6</div>
+          <div class="sp-seat selected" id="seat-C7">7</div>
+          <div class="sp-seat selected" id="seat-C8">8</div>
+          <div class="sp-seat" id="seat-C9">9</div>
+          <div class="sp-seat" id="seat-C10">10</div>
+        </div>
+        <div class="sp-seat-row" id="row-D">
+          <div class="sp-seat-row-label">D</div>
+          <div class="sp-seat" id="seat-D1">1</div>
+          <div class="sp-seat" id="seat-D2">2</div>
+          <div class="sp-seat booked" id="seat-D3">3</div>
+          <div class="sp-seat booked" id="seat-D4">4</div>
+          <div class="sp-seat booked" id="seat-D5">5</div>
+          <div class="sp-seat" id="seat-D6">6</div>
+          <div class="sp-seat" id="seat-D7">7</div>
+          <div class="sp-seat" id="seat-D8">8</div>
+          <div class="sp-seat booked" id="seat-D9">9</div>
+          <div class="sp-seat" id="seat-D10">10</div>
+        </div>
+        <div class="sp-seat-row" id="row-E">
+          <div class="sp-seat-row-label">E</div>
+          <div class="sp-seat booked" id="seat-E1">1</div>
+          <div class="sp-seat" id="seat-E2">2</div>
+          <div class="sp-seat" id="seat-E3">3</div>
+          <div class="sp-seat" id="seat-E4">4</div>
+          <div class="sp-seat booked" id="seat-E5">5</div>
+          <div class="sp-seat booked" id="seat-E6">6</div>
+          <div class="sp-seat" id="seat-E7">7</div>
+          <div class="sp-seat" id="seat-E8">8</div>
+          <div class="sp-seat" id="seat-E9">9</div>
+          <div class="sp-seat" id="seat-E10">10</div>
+        </div>
+      </div>
+
+      <!-- ECONOMY section -->
+      <div id="section-economy">
+        <div class="sp-seat-section-label">ECONOMY <span class="sp-seat-section-price">Rs.120.00</span></div>
+        <div class="sp-seat-row" id="row-F">
+          <div class="sp-seat-row-label">F</div>
+          <div class="sp-seat" id="seat-F1">1</div>
+          <div class="sp-seat" id="seat-F2">2</div>
+          <div class="sp-seat booked" id="seat-F3">3</div>
+          <div class="sp-seat selected" id="seat-F4">4</div>
+          <div class="sp-seat selected" id="seat-F5">5</div>
+          <div class="sp-seat" id="seat-F6">6</div>
+          <div class="sp-seat booked" id="seat-F7">7</div>
+          <div class="sp-seat" id="seat-F8">8</div>
+          <div class="sp-seat" id="seat-F9">9</div>
+          <div class="sp-seat" id="seat-F10">10</div>
+        </div>
+        <div class="sp-seat-row" id="row-G">
+          <div class="sp-seat-row-label">G</div>
+          <div class="sp-seat" id="seat-G1">1</div>
+          <div class="sp-seat booked" id="seat-G2">2</div>
+          <div class="sp-seat" id="seat-G3">3</div>
+          <div class="sp-seat" id="seat-G4">4</div>
+          <div class="sp-seat booked" id="seat-G5">5</div>
+          <div class="sp-seat" id="seat-G6">6</div>
+          <div class="sp-seat" id="seat-G7">7</div>
+          <div class="sp-seat booked" id="seat-G8">8</div>
+          <div class="sp-seat" id="seat-G9">9</div>
+          <div class="sp-seat" id="seat-G10">10</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Booking summary sidebar -->
+    <div class="sp-price-info" id="booking-sidebar">
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:20px;">Booking Summary</h3>
+      <div class="sp-summary-row">
+        <span class="sp-summary-label">Movie</span>
+        <span class="sp-summary-val">Irumudi</span>
+      </div>
+      <div class="sp-summary-row">
+        <span class="sp-summary-label">Date &amp; Time</span>
+        <span class="sp-summary-val">Thu, 27 Aug &middot; 11:15 AM</span>
+      </div>
+      <div class="sp-summary-row">
+        <span class="sp-summary-label">Selected Seats</span>
+        <span class="sp-summary-val">PE – A02, A03</span>
+      </div>
+      <div class="sp-summary-row">
+        <span class="sp-summary-label">Category</span>
+        <span class="sp-summary-val">PRIME</span>
+      </div>
+      <div class="sp-summary-row total">
+        <span class="sp-summary-label">Total</span>
+        <span class="sp-red">₹436.04</span>
+      </div>
+      <a href="proceed-booking.html" style="display:block;margin-top:20px;">
+        <button class="sp-btn" id="proceed-btn" style="width:100%;padding:14px;font-size:16px;border-radius:12px;">
+          Proceed to Book
+        </button>
+      </a>
+    </div>
+  </div>
+</main>
+
+<script>
+  document.querySelectorAll('.sp-seat:not(.booked)').forEach(seat => {
+    seat.addEventListener('click', () => {
+      seat.classList.toggle('selected');
+    });
+  });
+</script>
+</body>
+
+</html>
